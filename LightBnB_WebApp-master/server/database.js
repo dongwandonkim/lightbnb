@@ -82,18 +82,22 @@ const getAllReservations = function(guest_id, limit = 10) {
     .query(`
     SELECT reservations.id as id, properties.title as title, 
     reservations.start_date as start_date, properties.cost_per_night as cost_per_night,
+    properties.thumbnail_photo_url, properties.parking_spaces, properties.number_of_bathrooms,
+    properties.number_of_bedrooms,
     avg(property_reviews.rating) as average_rating
     FROM properties JOIN reservations ON reservations.property_id = properties.id
     JOIN property_reviews ON property_reviews.property_id = properties.id
     JOIN users ON properties.owner_id = users.id
     WHERE reservations.guest_id = $1
-    GROUP BY reservations.id, properties.title, 
-    reservations.start_date, properties.cost_per_night
+    GROUP BY reservations.id, properties.title, properties.thumbnail_photo_url,
+    reservations.start_date, properties.cost_per_night,properties.number_of_bedrooms,
+    properties.parking_spaces, properties.number_of_bathrooms
     ORDER BY reservations.start_date
     LIMIT $2;
     `,
     [guest_id, limit])
     .then((result) => {
+      console.log(result.rows);
       return result.rows;
     })
     .catch((err) => {
