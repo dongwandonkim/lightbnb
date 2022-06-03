@@ -25,6 +25,7 @@ $(() => {
       addListing(listing);
     }
   }
+  
   window.propertyListings.addProperties = addProperties;
 
 });
